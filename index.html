@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="bg">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Спокоен дневник за вода, сън и движение, с лични отчети и цели."
+    />
+    <meta name="theme-color" content="#eff8f5" />
+    <title>Дневен ритъм — Твоят дневник за здраве</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Дневен ритъм — начало">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 4.5C12.8 9 7.5 14.2 7.5 19.5a8.5 8.5 0 0 0 17 0C24.5 14.2 19.2 9 16 4.5Z" />
+              <path d="M12 20.5a4.1 4.1 0 0 0 4.1 4.1" />
+            </svg>
+          </span>
+          <span>дневен<span class="brand-accent"> ритъм</span></span>
+        </a>
+        <span class="topbar-note">
+          <span class="status-dot" aria-hidden="true"></span>
+          Твоето спокойно място за грижа
+        </span>
+      </header>
+
+      <section class="welcome" aria-labelledby="page-title">
+        <div class="welcome-copy">
+          <p class="eyebrow">МАЛКИ СТЪПКИ. ПОВЕЧЕ ХАРМОНИЯ.</p>
+          <h1 id="page-title">Погрижи се за <span>себе си.</span></h1>
+          <p>
+            Всяка чаша вода, добра нощ сън и малко движение са повод за усмивка.
+            Записвай своите навици и виж как се чувстваш.
+          </p>
+        </div>
+        <div class="welcome-orbit" aria-hidden="true">
+          <span class="orbit-sun"></span>
+          <span class="orbit-leaf">✳</span>
+          <span class="orbit-dot"></span>
+        </div>
+      </section>
+
+      <section class="date-panel" aria-label="Избор на дата">
+        <div class="date-description">
+          <span class="date-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none">
+              <rect x="3" y="5" width="14" height="12" rx="2" />
+              <path d="M6.5 3v4M13.5 3v4M3 9h14" />
+            </svg>
+          </span>
+          <div>
+            <strong id="selected-date-label">Избери дата</strong>
+            <span id="record-status" class="record-status" role="status"></span>
+          </div>
+        </div>
+        <div class="date-controls">
+          <button class="icon-button" id="previous-day" type="button" aria-label="Предишен ден">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12.5 4-6 6 6 6" /></svg>
+          </button>
+          <label class="date-picker-label" for="date-picker">Избери ден</label>
+          <input id="date-picker" type="date" />
+          <button class="icon-button" id="next-day" type="button" aria-label="Следващ ден">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" /></svg>
+          </button>
+          <button class="today-button" id="today-button" type="button">Днес</button>
+        </div>
+      </section>
+
+      <section class="daily-card" aria-labelledby="daily-heading">
+        <div class="daily-copy">
+          <p class="eyebrow">ТВОЯТ ДНЕВЕН ЧЕК-ИН</p>
+          <h2 id="daily-heading">Грижата за теб започва сега.</h2>
+          <p id="daily-message" class="daily-message" aria-live="polite">
+            Всяка малка стъпка има значение. Избери един навик и започни.
+          </p>
+        </div>
+        <div
+          class="daily-score"
+          role="img"
+          aria-label="0 от 3 изпълнени цели"
+          id="daily-score"
+        >
+          <span class="score-number" id="completed-count">0</span>
+          <span class="score-divider">/ 3</span>
+          <span class="score-caption">цели</span>
+        </div>
+        <div class="daily-sparkle" aria-hidden="true">✳</div>
+      </section>
+
+      <section class="habits-section" aria-labelledby="habits-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ТВОИТЕ ЕЖЕДНЕВНИ НАВИЦИ</p>
+            <h2 id="habits-heading">Днешната грижа</h2>
+          </div>
+          <p class="section-hint">Можеш да редактираш записа по всяко време.</p>
+        </div>
+
+        <div class="habit-grid">
+          <article class="habit-card water-card" data-habit-card="water">
+            <div class="habit-visual water-visual">
+              <img
+                src="https://images.unsplash.com/photo-1624948465027-6f9b51067557?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                alt="Чаша с прясна вода на маса"
+                loading="lazy"
+              />
+              <span class="visual-wash"></span>
+              <span class="visual-caption">Хидратация с лекота</span>
+              <span class="habit-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M16 4.5C12.8 9 7.5 14.2 7.5 19.5a8.5 8.5 0 0 0 17 0C24.5 14.2 19.2 9 16 4.5Z" />
+                  <path d="M12 20.5a4.1 4.1 0 0 0 4.1 4.1" />
+                </svg>
+              </span>
+            </div>
+            <div class="habit-heading-row">
+              <div>
+                <h3>Вода</h3>
+                <p>Глътка по глътка.</p>
+              </div>
+              <span class="goal-tag">ЦЕЛ <strong id="water-goal-label">2 000 мл</strong></span>
+            </div>
+            <div class="habit-progress">
+              <div class="progress-copy">
+                <span class="progress-value" id="water-progress-text">Няма въведени данни</span>
+                <span id="water-progress-percent">—</span>
+              </div>
+              <div
+                class="progress-track"
+                id="water-progress"
+                role="progressbar"
+                aria-label="Напредък към целта за вода"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <span class="progress-fill"></span>
+              </div>
+              <p class="goal-encouragement" id="water-encouragement"></p>
+            </div>
+            <form class="update-form" data-habit="water" novalidate>
+              <label for="water-input">Приета вода <span>(мл)</span></label>
+              <div class="input-row">
+                <input
+                  id="water-input"
+                  name="value"
+                  type="number"
+                  min="0"
+                  max="10000"
+                  step="1"
+                  inputmode="numeric"
+                  placeholder="Напр. 1 500"
+                  aria-describedby="water-error"
+                  required
+                />
+                <button type="submit" aria-label="Запази приетата вода">Запази</button>
+              </div>
+              <p class="field-error" id="water-error" aria-live="polite"></p>
+            </form>
+            <details class="goal-editor">
+              <summary>Промени дневната цел</summary>
+              <form data-goal="water" novalidate>
+                <label for="water-goal-input">Цел за вода <span>(мл)</span></label>
+                <div class="goal-input-row">
+                  <input id="water-goal-input" type="number" min="1" max="10000" step="1" />
+                  <button type="submit">Обнови</button>
+                </div>
+                <p class="field-error" id="water-goal-error" aria-live="polite"></p>
+              </form>
+            </details>
+          </article>
+
+          <article class="habit-card sleep-card" data-habit-card="sleep">
+            <div class="habit-visual sleep-visual">
+              <img
+                src="https://images.unsplash.com/photo-1531353826977-0941b4779a1c?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                alt="Жена спи спокойно в удобно легло"
+                loading="lazy"
+              />
+              <span class="visual-wash"></span>
+              <span class="visual-caption">Почивката също е грижа</span>
+              <span class="habit-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M24.7 19.4A11 11 0 0 1 12.6 7.3 11 11 0 1 0 24.7 19.4Z" />
+                  <path d="m22.5 7 .8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8.8-1.7Z" />
+                </svg>
+              </span>
+            </div>
+            <div class="habit-heading-row">
+              <div>
+                <h3>Сън</h3>
+                <p>Почивката е важна.</p>
+              </div>
+              <span class="goal-tag">ЦЕЛ <strong id="sleep-goal-label">8 часа</strong></span>
+            </div>
+            <div class="habit-progress">
+              <div class="progress-copy">
+                <span class="progress-value" id="sleep-progress-text">Няма въведени данни</span>
+                <span id="sleep-progress-percent">—</span>
+              </div>
+              <div
+                class="progress-track"
+                id="sleep-progress"
+                role="progressbar"
+                aria-label="Напредък към целта за сън"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <span class="progress-fill"></span>
+              </div>
+              <p class="goal-encouragement" id="sleep-encouragement"></p>
+            </div>
+            <form class="update-form" data-habit="sleep" novalidate>
+              <label for="sleep-input">Сън през нощта <span>(часа)</span></label>
+              <div class="input-row">
+                <input
+                  id="sleep-input"
+                  name="value"
+                  type="number"
+                  min="0"
+                  max="24"
+                  step="0.1"
+                  inputmode="decimal"
+                  placeholder="Напр. 7,5"
+                  aria-describedby="sleep-error"
+                  required
+                />
+                <button type="submit" aria-label="Запази продължителността на съня">Запази</button>
+              </div>
+              <p class="field-error" id="sleep-error" aria-live="polite"></p>
+            </form>
+            <details class="goal-editor">
+              <summary>Промени дневната цел</summary>
+              <form data-goal="sleep" novalidate>
+                <label for="sleep-goal-input">Цел за сън <span>(часа)</span></label>
+                <div class="goal-input-row">
+                  <input id="sleep-goal-input" type="number" min="0.1" max="24" step="0.1" />
+                  <button type="submit">Обнови</button>
+                </div>
+                <p class="field-error" id="sleep-goal-error" aria-live="polite"></p>
+              </form>
+            </details>
+          </article>
+
+          <article class="habit-card exercise-card" data-habit-card="exercise">
+            <div class="habit-visual exercise-visual">
+              <img
+                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&amp;fit=crop&amp;w=900&amp;q=80"
+                alt="Жена практикува йога"
+                loading="lazy"
+              />
+              <span class="visual-wash"></span>
+              <span class="visual-caption">Движение с настроение</span>
+              <span class="habit-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M6 18.5 10.2 14l4 4 7.1-8 4.7 4.5" />
+                  <path d="M19.5 10h5v5" />
+                  <path d="M5 24h22" />
+                </svg>
+              </span>
+            </div>
+            <div class="habit-heading-row">
+              <div>
+                <h3>Движение</h3>
+                <p>По твоя начин.</p>
+              </div>
+              <span class="goal-tag">ЦЕЛ <strong id="exercise-goal-label">30 мин</strong></span>
+            </div>
+            <div class="habit-progress">
+              <div class="progress-copy">
+                <span class="progress-value" id="exercise-progress-text">Няма въведени данни</span>
+                <span id="exercise-progress-percent">—</span>
+              </div>
+              <div
+                class="progress-track"
+                id="exercise-progress"
+                role="progressbar"
+                aria-label="Напредък към целта за движение"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+                <span class="progress-fill"></span>
+              </div>
+              <p class="goal-encouragement" id="exercise-encouragement"></p>
+            </div>
+            <form class="update-form" data-habit="exercise" novalidate>
+              <label for="exercise-input">Активност днес <span>(минути)</span></label>
+              <div class="input-row">
+                <input
+                  id="exercise-input"
+                  name="value"
+                  type="number"
+                  min="0"
+                  max="1440"
+                  step="1"
+                  inputmode="numeric"
+                  placeholder="Напр. 20"
+                  aria-describedby="exercise-error"
+                  required
+                />
+                <button type="submit" aria-label="Запази физическата активност">Запази</button>
+              </div>
+              <p class="field-error" id="exercise-error" aria-live="polite"></p>
+            </form>
+            <details class="goal-editor">
+              <summary>Промени дневната цел</summary>
+              <form data-goal="exercise" novalidate>
+                <label for="exercise-goal-input">Цел за движение <span>(минути)</span></label>
+                <div class="goal-input-row">
+                  <input id="exercise-goal-input" type="number" min="1" max="1440" step="1" />
+                  <button type="submit">Обнови</button>
+                </div>
+                <p class="field-error" id="exercise-goal-error" aria-live="polite"></p>
+              </form>
+            </details>
+          </article>
+        </div>
+        <div class="record-actions">
+          <p id="storage-message" role="status" aria-live="polite"></p>
+          <button class="delete-button" id="delete-day" type="button" hidden>
+            Изтрий записа за тази дата
+          </button>
+        </div>
+      </section>
+
+      <section class="reports-section" aria-labelledby="reports-heading">
+        <div class="section-heading report-heading">
+          <div>
+            <p class="eyebrow">ТВОЯТ ПЪТ, ПО ДНИ И МЕСЕЦИ</p>
+            <h2 id="reports-heading">Отчети</h2>
+          </div>
+          <p class="section-hint">Само данните, които си записал/а.</p>
+        </div>
+        <div class="report-toolbar">
+          <div class="report-tabs" role="tablist" aria-label="Период на отчета">
+            <button type="button" role="tab" id="tab-week" aria-selected="true" aria-controls="report-panel" data-period="week">Седмичен отчет</button>
+            <button type="button" role="tab" id="tab-month" aria-selected="false" aria-controls="report-panel" data-period="month" tabindex="-1">Месечен отчет</button>
+            <button type="button" role="tab" id="tab-year" aria-selected="false" aria-controls="report-panel" data-period="year" tabindex="-1">Годишен отчет</button>
+          </div>
+          <div class="period-controls">
+            <button class="icon-button" id="previous-period" type="button" aria-label="Предишен период">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12.5 4-6 6 6 6" /></svg>
+            </button>
+            <strong id="period-label" aria-live="polite"></strong>
+            <button class="icon-button" id="next-period" type="button" aria-label="Следващ период">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="report-panel" role="tabpanel" aria-labelledby="tab-week" tabindex="0">
+          <div class="report-stats" id="report-stats"></div>
+          <div class="charts-grid" id="charts-grid">
+            <article class="chart-card" data-chart="water">
+              <div class="chart-heading">
+                <span class="chart-icon water-chart-icon" aria-hidden="true">↟</span>
+                <div><h3>Вода</h3><p id="water-chart-subtitle">Прием на ден</p></div>
+              </div>
+              <canvas id="water-chart" tabindex="0" aria-label="Графика за приетата вода"></canvas>
+              <p class="chart-tooltip" id="water-chart-tooltip" aria-live="polite"></p>
+              <div class="chart-legend"><span class="legend-value">Приета вода</span><span class="legend-goal">Дневна цел</span></div>
+            </article>
+            <article class="chart-card" data-chart="sleep">
+              <div class="chart-heading">
+                <span class="chart-icon sleep-chart-icon" aria-hidden="true">☾</span>
+                <div><h3>Сън</h3><p id="sleep-chart-subtitle">Часове на нощ</p></div>
+              </div>
+              <canvas id="sleep-chart" tabindex="0" aria-label="Графика за продължителността на съня"></canvas>
+              <p class="chart-tooltip" id="sleep-chart-tooltip" aria-live="polite"></p>
+              <div class="chart-legend"><span class="legend-value">Часове сън</span><span class="legend-goal">Дневна цел</span></div>
+            </article>
+            <article class="chart-card" data-chart="exercise">
+              <div class="chart-heading">
+                <span class="chart-icon exercise-chart-icon" aria-hidden="true">↗</span>
+                <div><h3>Движение</h3><p id="exercise-chart-subtitle">Активност на ден</p></div>
+              </div>
+              <canvas id="exercise-chart" tabindex="0" aria-label="Графика за физическата активност"></canvas>
+              <p class="chart-tooltip" id="exercise-chart-tooltip" aria-live="polite"></p>
+              <div class="chart-legend"><span class="legend-value">Активност</span><span class="legend-goal">Дневна цел</span></div>
+            </article>
+          </div>
+          <p class="empty-report" id="chart-empty-state" hidden>
+            За този период все още няма записани данни. Записите за избрана дата ще се покажат тук.
+          </p>
+          <div class="table-wrap" id="report-table-wrap"></div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>Един ден наведнъж. Справяш се чудесно.</span>
+        <span class="footer-heart" aria-hidden="true">♥</span>
+      </footer>
+    </main>
+
+    <dialog class="confirm-dialog" id="delete-dialog" aria-labelledby="delete-heading">
+      <form method="dialog">
+        <span class="dialog-icon" aria-hidden="true">!</span>
+        <h2 id="delete-heading">Да изтрием ли записа?</h2>
+        <p id="delete-description">Това действие ще премахне записите за избраната дата.</p>
+        <div class="dialog-actions">
+          <button class="cancel-button" value="cancel">Запази записа</button>
+          <button class="confirm-delete" id="confirm-delete" value="confirm">Изтрий записа</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
