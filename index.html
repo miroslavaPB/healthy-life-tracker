@@ -8,26 +8,23 @@
       content="Спокоен дневник за вода, сън и движение, с лични отчети и цели."
     />
     <meta name="theme-color" content="#eff8f5" />
-    <title>Дневен ритъм — Твоят дневник за здраве</title>
+    <title>Дневник за здраве</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="quote-selection.js" defer></script>
+    <script src="habit-analysis.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
     <main class="page-shell">
       <header class="topbar">
-        <a class="brand" href="#" aria-label="Дневен ритъм — начало">
+        <a class="brand" href="#" aria-label="Начало">
           <span class="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 32 32" fill="none">
               <path d="M16 4.5C12.8 9 7.5 14.2 7.5 19.5a8.5 8.5 0 0 0 17 0C24.5 14.2 19.2 9 16 4.5Z" />
               <path d="M12 20.5a4.1 4.1 0 0 0 4.1 4.1" />
             </svg>
           </span>
-          <span>дневен<span class="brand-accent"> ритъм</span></span>
         </a>
-        <span class="topbar-note">
-          <span class="status-dot" aria-hidden="true"></span>
-          Твоето спокойно място за грижа
-        </span>
       </header>
 
       <section class="welcome" aria-labelledby="page-title">
@@ -44,6 +41,27 @@
           <span class="orbit-leaf">✳</span>
           <span class="orbit-dot"></span>
         </div>
+      </section>
+
+      <section class="quote-card" aria-labelledby="quote-heading">
+        <div class="quote-mark" aria-hidden="true">“</div>
+        <div class="quote-content">
+          <div class="quote-heading-row">
+            <p class="eyebrow" id="quote-heading">ЦИТАТ НА ДЕНЯ</p>
+            <span class="quote-date" id="quote-date"></span>
+          </div>
+          <p class="quote-text quote-text-bg" lang="bg" id="quote-text-bg"></p>
+          <p class="quote-author quote-author-bg" id="quote-author-bg"></p>
+          <div class="quote-translation">
+            <span class="language-label" lang="en">EN</span>
+            <div>
+              <p class="quote-text quote-text-en" lang="en" id="quote-text-en"></p>
+              <p class="quote-author quote-author-en" lang="en" id="quote-author-en"></p>
+            </div>
+          </div>
+          <p class="quote-status" id="quote-status" role="status" aria-live="polite"></p>
+        </div>
+        <span class="quote-spark" aria-hidden="true">✳</span>
       </section>
 
       <section class="date-panel" aria-label="Избор на дата">
@@ -391,6 +409,42 @@
             За този период все още няма записани данни. Записите за избрана дата ще се покажат тук.
           </p>
           <div class="table-wrap" id="report-table-wrap"></div>
+        </div>
+      </section>
+
+      <section class="coach-section" aria-labelledby="coach-heading">
+        <div class="section-heading coach-heading">
+          <div>
+            <p class="eyebrow">МАЛКИ СТЪПКИ, ПОДКРЕПЕНИ ОТ ТВОИТЕ ЗАПИСИ</p>
+            <h2 id="coach-heading">Твоят здравословен помощник</h2>
+            <p class="coach-english-title" lang="en">Healthy Habit Coach</p>
+          </div>
+          <p class="section-hint">
+            Преглежда записаните навици и предлага практични идеи. Анализът се извършва локално в браузъра.
+          </p>
+        </div>
+        <div class="coach-controls">
+          <label for="coach-period">Период за анализ</label>
+          <select id="coach-period">
+            <option value="7">Последните 7 дни</option>
+            <option value="30">Последните 30 дни</option>
+            <option value="all">Всички налични записи</option>
+          </select>
+          <button class="coach-button" id="analyze-habits" type="button">
+            Анализирай навиците ми
+          </button>
+        </div>
+        <div
+          class="coach-results"
+          id="coach-results"
+          role="region"
+          aria-label="Резултат от анализа на навиците"
+          aria-live="polite"
+          aria-busy="false"
+        >
+          <p class="coach-placeholder">
+            Избери период и анализирай записите си, за да видиш обобщение и идеи за следваща малка стъпка.
+          </p>
         </div>
       </section>
 

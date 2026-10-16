@@ -18,11 +18,104 @@ let reportPeriod = "week";
 let reportChartData = {};
 let chartActiveIndexes = { water: 0, sleep: 0, exercise: 0 };
 let storageCanWrite = true;
+let dailyQuotes = [];
+let quoteTimer = null;
+let quoteRefreshInterval = null;
+let displayedQuoteDate = "";
+let displayedTimeZoneOffset = null;
 
 const datePicker = document.querySelector("#date-picker");
 const storageMessage = document.querySelector("#storage-message");
 const deleteDialog = document.querySelector("#delete-dialog");
 const numberFormatter = new Intl.NumberFormat("bg-BG", { maximumFractionDigits: 1 });
+
+function renderDailyQuote(date = new Date()) {
+  const quote = DailyQuoteSelection.selectQuoteForDate(
+    date,
+    dailyQuotes,
+    DailyQuoteSelection.fallbackQuote,
+  );
+  const quoteDate = getLocalDateKey(date);
+
+  document.querySelector("#quote-text-bg").textContent = quote.bg.text;
+  document.querySelector("#quote-author-bg").textContent = quote.bg.author;
+  document.querySelector("#quote-text-en").textContent = quote.en.text;
+  document.querySelector("#quote-author-en").textContent = quote.en.author;
+  document.querySelector("#quote-date").textContent = formatDate(quoteDate);
+  displayedQuoteDate = quoteDate;
+  displayedTimeZoneOffset = date.getTimezoneOffset();
+}
+
+function scheduleNextQuoteRefresh() {
+  window.clearTimeout(quoteTimer);
+  const now = new Date();
+  const nextLocalMidnight = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0,
+    0,
+    0,
+    100,
+  );
+  const delay = Math.max(0, nextLocalMidnight.getTime() - now.getTime());
+
+  quoteTimer = window.setTimeout(() => {
+    renderDailyQuote();
+    scheduleNextQuoteRefresh();
+  }, delay);
+}
+
+function refreshDailyQuote() {
+  const now = new Date();
+  if (
+    getLocalDateKey(now) !== displayedQuoteDate ||
+    now.getTimezoneOffset() !== displayedTimeZoneOffset
+  ) {
+    renderDailyQuote(now);
+  }
+  scheduleNextQuoteRefresh();
+}
+
+async function loadDailyQuotes() {
+  const status = document.querySelector("#quote-status");
+  try {
+    const response = await fetch(new URL("quotes.json", document.baseURI));
+    if (!response.ok) throw new Error(`Quote file returned HTTP ${response.status}.`);
+
+    const quoteFile = await response.json();
+    if (!Array.isArray(quoteFile)) {
+      throw new Error("Quote file must contain a JSON array.");
+    }
+
+    dailyQuotes = quoteFile.filter(DailyQuoteSelection.isValidQuote);
+    if (dailyQuotes.length === 0) {
+      status.textContent = "Списъкът с цитати е празен или невалиден. Показваме резервен цитат.";
+    } else if (dailyQuotes.length < quoteFile.length) {
+      status.textContent = "Някои цитати не са валидни и бяха пропуснати.";
+    }
+  } catch {
+    dailyQuotes = [];
+    status.textContent = "Показваме резервния цитат.";
+  }
+
+  renderDailyQuote();
+}
+
+function startDailyQuote() {
+  renderDailyQuote();
+  void loadDailyQuotes();
+  scheduleNextQuoteRefresh();
+
+  if (quoteRefreshInterval !== null) window.clearInterval(quoteRefreshInterval);
+  quoteRefreshInterval = window.setInterval(refreshDailyQuote, 60_000);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") refreshDailyQuote();
+  });
+  window.addEventListener("focus", refreshDailyQuote);
+  window.addEventListener("pageshow", refreshDailyQuote);
+}
 
 function getLocalDateKey(date) {
   const year = date.getFullYear();
@@ -472,6 +565,190 @@ function formatAverage(value, habit) {
   return `${formatNumber(value, 1)} ${habitDefinitions[habit].unit}`;
 }
 
+function createCoachElement(tagName, className, text) {
+  const element = document.createElement(tagName);
+  if (className) element.className = className;
+  element.textContent = text;
+  return element;
+}
+
+function renderCoachEmptyState() {
+  const results = document.querySelector("#coach-results");
+  results.replaceChildren(
+    createCoachElement("h3", "", "Няма данни за този период"),
+    createCoachElement(
+      "p",
+      "",
+      "В избрания период няма валидни записани стойности. Записите ти остават запазени и можеш да опиташ друг период.",
+    ),
+  );
+}
+
+function renderCoachAnalysis(analysis) {
+  const results = document.querySelector("#coach-results");
+  const periodLabel = {
+    "7": "последните 7 дни",
+    "30": "последните 30 дни",
+    all: "всички налични записи",
+  }[analysis.period];
+  const summary = document.createElement("section");
+  summary.append(
+    createCoachElement("h3", "", "Обобщение"),
+    createCoachElement(
+      "p",
+      "",
+      `За ${periodLabel} има ${analysis.daysWithRecords} ${
+        analysis.daysWithRecords === 1 ? "ден със запис" : "дни със записи"
+      }. Броят се само валидните записани стойности; липсващите дни и показатели не се приемат за нула.`,
+    ),
+  );
+
+  const metricGrid = document.createElement("div");
+  metricGrid.className = "coach-metrics";
+  for (const habit of Object.keys(habitDefinitions)) {
+    const definition = habitDefinitions[habit];
+    const metric = analysis.metrics[habit];
+    const card = document.createElement("article");
+    card.className = `coach-metric coach-metric-${habit}`;
+    card.append(
+      createCoachElement("h4", "", definition.label),
+      createCoachElement(
+        "p",
+        "coach-metric-count",
+        `Валидни стойности: ${metric.count}`,
+      ),
+    );
+    if (metric.count > 0) {
+      card.append(
+        createCoachElement(
+          "p",
+          "",
+          `Средно: ${formatAverage(metric.average, habit)}.`,
+        ),
+      );
+      if (metric.goal !== null) {
+        const goalLabel =
+          metric.goal === defaultGoals[habit]
+            ? "цел по подразбиране на приложението"
+            : "запазена цел";
+        const averageComparison =
+          metric.average >= metric.goal ? "достига или надвишава" : "е под";
+        card.append(
+          createCoachElement(
+            "p",
+            "",
+            `Цел (${goalLabel}): ${formatHabitValue(metric.goal, habit)}. Средното ${averageComparison} целта; ${metric.goalMetCount} от ${metric.count} записа я достигат.`,
+          ),
+        );
+      }
+    } else {
+      card.append(createCoachElement("p", "", "Няма стойности за този показател."));
+    }
+    metricGrid.append(card);
+  }
+  summary.append(metricGrid);
+
+  const patterns = document.createElement("section");
+  patterns.append(createCoachElement("h3", "", "Наблюдавани модели"));
+  const patternList = document.createElement("ul");
+  for (const habit of Object.keys(habitDefinitions)) {
+    const definition = habitDefinitions[habit];
+    const metric = analysis.metrics[habit];
+    const text =
+      metric.pattern === null
+        ? `${definition.label}: недостатъчно данни за смислен модел (има ${metric.count} от нужните поне 3 валидни записа).`
+        : `${definition.label}: ${metric.count} записа са в диапазона ${formatHabitValue(
+            metric.pattern.minimum,
+            habit,
+          )}–${formatHabitValue(metric.pattern.maximum, habit)}; средната стойност ${
+            metric.pattern.goalStatus === "at-or-above"
+              ? "достига или надвишава"
+              : "е под"
+          } ${metric.goal === null ? "сравнима цел не е зададена" : `целта ${formatHabitValue(metric.goal, habit)}`}.`;
+    patternList.append(createCoachElement("li", "", text));
+  }
+  patterns.append(patternList);
+
+  const recommendations = [];
+  for (const habit of Object.keys(habitDefinitions)) {
+    const definition = habitDefinitions[habit];
+    const metric = analysis.metrics[habit];
+    if (metric.pattern?.goalStatus !== "below") continue;
+    const suggestions = {
+      water: `Опитай да свържеш чаша вода с ежедневна рутина, която вече имаш, и продължи да записваш приетото количество.`,
+      sleep: `Ако ти е удобно, избери спокоен и постоянен час за подготовка за сън и продължи да записваш часовете си.`,
+      exercise: `Планирай кратка разходка или друго приятно за теб движение и отбележи минутите, когато ти е удобно.`,
+    };
+    recommendations.push(`${definition.label}: ${suggestions[habit]}`);
+  }
+  if (recommendations.length === 0) {
+    const hasSparseMetric = Object.values(analysis.metrics).some((metric) => metric.pattern === null);
+    recommendations.push(
+      hasSparseMetric
+        ? "За по-полезно обобщение, опитай да записваш избраните навици по няколко пъти през периода. Пропуснатите дни остават неизвестни."
+        : "Продължи да записваш навиците си в удобен за теб ритъм и избирай малки стъпки, които ти пасват.",
+    );
+  }
+  const recommendationSection = document.createElement("section");
+  recommendationSection.append(
+    createCoachElement("h3", "", "Практични идеи"),
+  );
+  const recommendationList = document.createElement("ul");
+  for (const recommendation of recommendations.slice(0, 3)) {
+    recommendationList.append(createCoachElement("li", "", recommendation));
+  }
+  recommendationSection.append(recommendationList);
+
+  results.replaceChildren(
+    summary,
+    patterns,
+    recommendationSection,
+    createCoachElement(
+      "p",
+      "coach-data-note",
+      "Това е локален анализ на записаните стойности, а не разговор с генеративен AI. Целите, които съвпадат с началните стойности, са обозначени като цели по подразбиране.",
+    ),
+  );
+}
+
+async function analyzeHabits() {
+  const button = document.querySelector("#analyze-habits");
+  const results = document.querySelector("#coach-results");
+  button.disabled = true;
+  button.textContent = "Анализирам...";
+  results.setAttribute("aria-busy", "true");
+  results.replaceChildren(createCoachElement("p", "coach-loading", "Анализирам записите ти локално…"));
+
+  try {
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+    const analysis = HabitAnalysis.analyzeHabitRecords(
+      records,
+      goals,
+      document.querySelector("#coach-period").value,
+      getLocalDateKey(new Date()),
+      habitDefinitions,
+    );
+    if (analysis.daysWithRecords === 0) renderCoachEmptyState();
+    else renderCoachAnalysis(analysis);
+  } catch (error) {
+    console.error("Healthy Habit Coach analysis failed.", error);
+    results.replaceChildren(
+      createCoachElement("h3", "", "Неуспешен анализ"),
+      createCoachElement(
+        "p",
+        "coach-error",
+        `Не успяхме да анализираме записите локално: ${
+          error instanceof Error ? error.message : "възникна неизвестна грешка"
+        }`,
+      ),
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "Анализирай навиците ми";
+    results.setAttribute("aria-busy", "false");
+  }
+}
+
 function renderStats(dateKeys) {
   const summary = getStats(dateKeys);
   const cards = [
@@ -827,6 +1104,7 @@ function deleteSelectedRecord() {
 }
 
 function attachEventHandlers() {
+  document.querySelector("#analyze-habits").addEventListener("click", analyzeHabits);
   document.querySelector("#previous-day").addEventListener("click", () => {
     changeSelectedDate(shiftDays(selectedDate, -1));
   });
@@ -902,6 +1180,7 @@ function startTracker() {
   attachEventHandlers();
   renderSelectedDate();
   renderReport();
+  startDailyQuote();
 }
 
 startTracker();
