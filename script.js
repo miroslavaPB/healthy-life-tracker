@@ -39,8 +39,6 @@ function renderDailyQuote(date = new Date()) {
 
   document.querySelector("#quote-text-bg").textContent = quote.bg.text;
   document.querySelector("#quote-author-bg").textContent = quote.bg.author;
-  document.querySelector("#quote-text-en").textContent = quote.en.text;
-  document.querySelector("#quote-author-en").textContent = quote.en.author;
   document.querySelector("#quote-date").textContent = formatDate(quoteDate);
   displayedQuoteDate = quoteDate;
   displayedTimeZoneOffset = date.getTimezoneOffset();

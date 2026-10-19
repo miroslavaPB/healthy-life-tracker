@@ -221,36 +221,6 @@ button {
   content: "— ";
 }
 
-.quote-translation {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 9px;
-  padding-top: 8px;
-  border-top: 1px solid #e8f1ed;
-}
-
-.language-label {
-  margin-top: 2px;
-  padding: 3px 5px;
-  border-radius: 5px;
-  background: #e8f4ef;
-  color: #5b8877;
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.quote-text-en {
-  margin: 0;
-  color: #60786f;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.quote-author-en {
-  font-size: 9px;
-}
-
 .quote-status {
   margin: 6px 0 0;
   color: #9b7969;
