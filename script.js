@@ -94,7 +94,7 @@ async function loadDailyQuotes() {
     }
   } catch {
     dailyQuotes = [];
-    status.textContent = "Цитатите не могат да бъдат заредени.";
+    status.textContent = "";
   }
 
   renderDailyQuote();
