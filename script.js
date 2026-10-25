@@ -88,13 +88,13 @@ async function loadDailyQuotes() {
 
     dailyQuotes = quoteFile.filter(DailyQuoteSelection.isValidQuote);
     if (dailyQuotes.length === 0) {
-      status.textContent = "Списъкът с цитати е празен или невалиден. Показваме резервен цитат.";
+      status.textContent = "Списъкът с цитати е празен или невалиден.";
     } else if (dailyQuotes.length < quoteFile.length) {
       status.textContent = "Някои цитати не са валидни и бяха пропуснати.";
     }
   } catch {
     dailyQuotes = [];
-    status.textContent = "Показваме резервния цитат.";
+    status.textContent = "Цитатите не могат да бъдат заредени.";
   }
 
   renderDailyQuote();

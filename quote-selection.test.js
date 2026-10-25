@@ -13,7 +13,6 @@ function makeQuotes(count) {
   return Array.from({ length: count }, (_, index) => ({
     id: `quote-${index + 1}`,
     bg: { text: `Мисъл ${index + 1}`, author: "Неизвестен" },
-    en: { text: `Thought ${index + 1}`, author: "Unknown" },
   }));
 }
 
@@ -74,14 +73,24 @@ describe("daily quote selection", () => {
     );
   });
 
-  it("uses the bilingual default for missing, empty, or malformed quote lists", () => {
+  it("uses the Bulgarian default for missing, empty, or malformed quote lists", () => {
     const date = new Date(2026, 0, 1);
-    const malformed = [{ bg: { text: "Липсва английски текст" } }];
+    const malformed = [{ bg: { text: "Липсва автор" } }];
 
+    assert.equal(Object.hasOwn(fallbackQuote, "en"), false);
     assert.equal(selectQuoteForDate(date, undefined), fallbackQuote);
     assert.equal(selectQuoteForDate(date, []), fallbackQuote);
     assert.equal(selectQuoteForDate(date, malformed), fallbackQuote);
     assert.equal(selectQuoteForDate(new Date(Number.NaN), makeQuotes(1)), fallbackQuote);
+  });
+
+  it("accepts Bulgarian quotes without an English translation", () => {
+    const quote = {
+      id: "bulgarian-only",
+      bg: { text: "Само на български.", author: "Неизвестен" },
+    };
+
+    assert.equal(selectQuoteForDate(new Date(2026, 0, 1), [quote]), quote);
   });
 
   it("offers 366 different choices within a leap year", () => {
@@ -95,15 +104,14 @@ describe("daily quote selection", () => {
     assert.equal(selectedIds.size, 366);
   });
 
-  it("ships 366 unique bilingual quotes attributed as unknown", () => {
+  it("ships 366 unique Bulgarian quotes attributed as unknown", () => {
     assert.equal(bundledQuotes.length, 366);
     assert.equal(new Set(bundledQuotes.map((quote) => quote.bg.text)).size, 366);
-    assert.equal(new Set(bundledQuotes.map((quote) => quote.en.text)).size, 366);
     assert.ok(
       bundledQuotes.every(
         (quote) =>
           quote.bg.author === "Неизвестен" &&
-          quote.en.author === "Unknown" &&
+          !Object.hasOwn(quote, "en") &&
           quote.attribution,
       ),
     );

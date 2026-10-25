@@ -5,10 +5,6 @@
       text: "Грижата расте с всяка малка стъпка.",
       author: "Неизвестен",
     },
-    en: {
-      text: "Care grows with every small step.",
-      author: "Unknown",
-    },
     attribution: "Оригинален текст за приложението.",
   });
 
@@ -18,15 +14,10 @@
         typeof quote === "object" &&
         !Array.isArray(quote) &&
         quote.bg &&
-        quote.en &&
         typeof quote.bg.text === "string" &&
         quote.bg.text.trim() &&
         typeof quote.bg.author === "string" &&
-        quote.bg.author.trim() &&
-        typeof quote.en.text === "string" &&
-        quote.en.text.trim() &&
-        typeof quote.en.author === "string" &&
-        quote.en.author.trim(),
+        quote.bg.author.trim(),
     );
   }
 
