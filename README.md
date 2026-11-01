@@ -11,17 +11,30 @@ time.
 - View progress reports and habit insights
 - Get a daily motivational quote
 - Save your data in your browser
+- Export and restore records and personal goals using XML backups
 
 ## Run Locally
 
-The application does not require installing dependencies or setting up a backend.
+No dependencies, backend, or build step are required.
 
-To run the application:
+1. Download or clone the repository.
+2. Open the `healthy-life-tracker` folder.
+3. Open `index.html` in a modern web browser.
 
-Download or clone the project repository.
+The app stores daily records and personal goals in the browser's Local Storage.
+Those data stay in that browser unless you export a backup.
 
-Open the healthy-life-tracker folder.
+## Export and Import Backups
 
-Double-click index.html to open the application in your web browser.
+Open the **Резервно копие** section at the bottom of the page:
 
-The application runs directly in the browser and stores user entries locally using Local Storage.
+- Select **Експортирай данните** to download an XML file named
+  `healthy-life-tracker-backup-YYYY-MM-DD.xml`.
+- Select an `.xml` backup file to restore it. The app validates its format,
+  dates, habit values, and goals before asking you to confirm replacement.
+- Confirm to replace the current records and goals. If you cancel or the file
+  is invalid, the data currently stored in the browser are left unchanged.
+
+Backups use the app's version 2 data format. Quote content and application code
+are not included. Keep backup files somewhere safe; clearing browser storage
+does not delete exported files.

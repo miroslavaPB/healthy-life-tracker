@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="style.css" />
     <script src="quote-selection.js" defer></script>
     <script src="habit-analysis.js" defer></script>
+    <script src="data-backup.js" defer></script>
     <script src="script.js" defer></script>
   </head>
   <body>
@@ -439,6 +440,36 @@
             Избери период и анализирай записите си, за да видиш обобщение и идеи за следваща малка стъпка.
           </p>
         </div>
+      </section>
+
+      <section class="data-transfer-section" aria-labelledby="data-transfer-heading">
+        <div class="section-heading data-transfer-heading">
+          <div>
+            <p class="eyebrow">ТВОИТЕ ДАННИ ОСТАВАТ ПРИ ТЕБ</p>
+            <h2 id="data-transfer-heading">Резервно копие</h2>
+          </div>
+          <p class="section-hint">
+            Запази или възстанови записите и личните си цели като XML файл.
+          </p>
+        </div>
+        <div class="data-transfer-controls">
+          <button class="data-transfer-button" id="export-data" type="button">
+            Експортирай данните
+          </button>
+          <div class="data-transfer-import">
+            <label for="import-data">Импортирай данни от XML архив</label>
+            <input
+              id="import-data"
+              type="file"
+              accept=".xml,application/xml,text/xml"
+              aria-describedby="data-transfer-hint"
+            />
+          </div>
+        </div>
+        <p class="data-transfer-hint" id="data-transfer-hint">
+          Импортирането заменя текущите записи и цели.
+        </p>
+        <p class="data-transfer-message" id="data-transfer-message" role="status" aria-live="polite"></p>
       </section>
 
       <footer class="footer">

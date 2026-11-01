@@ -26,6 +26,8 @@ let displayedTimeZoneOffset = null;
 
 const datePicker = document.querySelector("#date-picker");
 const storageMessage = document.querySelector("#storage-message");
+const dataTransferMessage = document.querySelector("#data-transfer-message");
+const importDataInput = document.querySelector("#import-data");
 const deleteDialog = document.querySelector("#delete-dialog");
 const numberFormatter = new Intl.NumberFormat("bg-BG", { maximumFractionDigits: 1 });
 
@@ -274,6 +276,76 @@ function saveAllData() {
       true,
     );
     return false;
+  }
+}
+
+function setDataTransferMessage(message, isError = false) {
+  dataTransferMessage.textContent = message;
+  dataTransferMessage.classList.toggle("error-message", isError);
+}
+
+function exportData() {
+  let downloadUrl = null;
+  let downloadLink = null;
+
+  try {
+    const data = { version: 2, records, goals };
+    const backup = HealthyLifeBackup.createBackupXml(data);
+    const blob = new Blob([backup], { type: "application/xml" });
+    const date = getLocalDateKey(new Date());
+    downloadUrl = URL.createObjectURL(blob);
+    downloadLink = document.createElement("a");
+    downloadLink.href = downloadUrl;
+    downloadLink.download = `healthy-life-tracker-backup-${date}.xml`;
+    downloadLink.hidden = true;
+    document.body.append(downloadLink);
+    downloadLink.click();
+    setDataTransferMessage("Архивът е подготвен и изтеглянето започна.");
+  } catch (error) {
+    const detail = error instanceof Error ? ` ${error.message}` : "";
+    setDataTransferMessage(`Не успяхме да експортираме данните.${detail}`, true);
+  } finally {
+    downloadLink?.remove();
+    if (downloadUrl !== null) {
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 0);
+    }
+  }
+}
+
+async function importData(event) {
+  const [file] = event.currentTarget.files;
+  if (!file) return;
+
+  try {
+    const backup = HealthyLifeBackup.parseBackupXml(await file.text());
+    const result = HealthyLifeBackup.importBackup(
+      localStorage,
+      STORAGE_KEY,
+      backup,
+      () =>
+        window.confirm(
+          "Текущите записи и цели ще бъдат заменени с данните от архива. Това действие не може да бъде отменено. Искаш ли да продължиш?",
+        ),
+    );
+
+    if (!result.imported) {
+      setDataTransferMessage("Импортирането беше отменено. Текущите данни не са променени.");
+      return;
+    }
+
+    records = result.data.records;
+    for (const habit of Object.keys(habitDefinitions)) {
+      goals[habit] = result.data.goals[habit];
+    }
+    storageCanWrite = true;
+    renderSelectedDate();
+    renderReport();
+    setDataTransferMessage("Архивът беше импортиран успешно.");
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "Възникна непредвидена грешка.";
+    setDataTransferMessage(`Импортът не беше извършен: ${detail}`, true);
+  } finally {
+    importDataInput.value = "";
   }
 }
 
@@ -1103,6 +1175,8 @@ function deleteSelectedRecord() {
 
 function attachEventHandlers() {
   document.querySelector("#analyze-habits").addEventListener("click", analyzeHabits);
+  document.querySelector("#export-data").addEventListener("click", exportData);
+  importDataInput.addEventListener("change", importData);
   document.querySelector("#previous-day").addEventListener("click", () => {
     changeSelectedDate(shiftDays(selectedDate, -1));
   });

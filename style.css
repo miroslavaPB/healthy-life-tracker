@@ -878,6 +878,111 @@ button {
   background: #fff0eb;
 }
 
+.data-transfer-section {
+  margin-top: 24px;
+  padding: 23px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 84%);
+  box-shadow: 0 9px 30px rgb(33 73 63 / 4%);
+}
+
+.data-transfer-heading {
+  margin-bottom: 17px;
+}
+
+.data-transfer-heading h2 {
+  margin: 5px 0 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+.data-transfer-controls {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  padding: 15px 0 10px;
+  border-top: 1px solid #edf3f0;
+}
+
+.data-transfer-button {
+  min-height: 40px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 9px;
+  background: #168879;
+  color: #fff;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.data-transfer-button:hover {
+  background: #117867;
+}
+
+.data-transfer-button:focus-visible,
+.data-transfer-import input:focus-visible,
+.data-transfer-import input::file-selector-button:focus-visible {
+  outline: 3px solid rgb(48 166 145 / 27%);
+  outline-offset: 2px;
+}
+
+.data-transfer-import {
+  display: grid;
+  flex: 1;
+  gap: 6px;
+}
+
+.data-transfer-import label {
+  color: #526b63;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.data-transfer-import input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 5px;
+  border: 1px solid #e1ebe7;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.data-transfer-import input::file-selector-button {
+  min-height: 28px;
+  margin-right: 9px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: #e4f4ed;
+  color: #247765;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.data-transfer-hint,
+.data-transfer-message {
+  margin: 5px 0 0;
+  color: #718784;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.data-transfer-message {
+  min-height: 15px;
+  color: #548c7a;
+}
+
+.data-transfer-message.error-message {
+  color: #aa514a;
+}
+
 .reports-section {
   margin-top: 31px;
   padding: 23px;
@@ -1450,6 +1555,10 @@ button {
     padding: 17px;
   }
 
+  .data-transfer-section {
+    padding: 17px;
+  }
+
   .coach-section {
     padding: 17px;
   }
@@ -1609,6 +1718,30 @@ button {
 
   .coach-section {
     padding: 15px 12px;
+  }
+
+  .data-transfer-section {
+    padding: 15px 12px;
+  }
+
+  .data-transfer-heading {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .data-transfer-heading .section-hint {
+    max-width: none;
+    text-align: left;
+  }
+
+  .data-transfer-controls {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .data-transfer-import input {
+    min-height: 44px;
   }
 
   .coach-heading {
